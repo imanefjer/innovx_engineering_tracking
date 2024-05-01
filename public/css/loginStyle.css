@@ -1,0 +1,39 @@
+
+.topright {
+    position: fixed;
+    top: -50px;
+    right:0;
+    margin:0px;
+    padding:0px;
+    rotate: -45deg;
+
+}
+.bottomleft {
+    position: fixed;
+    bottom: -50px;
+    left:0;
+    margin:0px;
+    padding:0px;
+    rotate: -45deg;
+
+}
+.bottomrightrot {
+    position: fixed;
+    bottom: 50%;
+    right:-50px;
+    margin:0px;
+    padding:0px;
+    rotate: -20deg;
+
+}
+.topleft {
+    position: fixed;
+    top: 60%;
+    left:0;
+    margin:0px;
+    padding:0px;
+    rotate: -20deg;
+
+
+}
+
