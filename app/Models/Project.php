@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+    protected $dates = ['start_date', 'due_date'];
 
-    protected $fillable = ['name', 'description', 'start_date', 'due_date', 'estimated_hours', 'actual_hours', 'manager_id'];
-
+    protected $fillable = [
+        'name', 'description', 'start_date', 'due_date', 'estimated_hours', 'manager_id'
+    ];
+        protected $casts = [
+        'start_date' => 'date',
+        'due_date' => 'date',
+    ];
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
@@ -24,5 +30,9 @@ class Project extends Model
     public function assignments()
     {
         return $this->hasMany(ProjectAssignment::class);
+    }
+    public function engineers()
+    {
+        return $this->belongsToMany(User::class, 'project_assignments', 'project_id', 'user_id');
     }
 }

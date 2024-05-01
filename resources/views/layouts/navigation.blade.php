@@ -34,6 +34,11 @@
                          <x-nav-link :href="route('admin.create-user')" :active="request()->routeIs('admin.create-user')">
                             {{ __('Add User') }}
                         </x-nav-link>
+                    
+                    @elseif(auth()->user()->role === 'manager')
+                        <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.index')">
+                            {{ __('Projects') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>

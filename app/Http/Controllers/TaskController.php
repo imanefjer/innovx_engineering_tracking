@@ -19,18 +19,34 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'project_id' => 'required|integer|exists:projects,id',
-            'assigned_to' => 'required|integer|exists:users,id',
-            'status' => 'required|string',
-            'due_date' => 'required|date'
-        ]);
-        Task::create($validated);
-        return redirect()->route('tasks.index');
+        $project_id = $request->input('project_id');
+        foreach ($request->input('tasks', []) as $engineer_id => $task) {
+            $validatedTask = $request->validate([
+                "tasks.$engineer_id.name" => 'required|string|max:255',
+                "tasks.$engineer_id.description" => 'required|string',
+                "tasks.$engineer_id.status" => 'required|string',
+                "tasks.$engineer_id.start_date" => 'required|date',
+                "tasks.$engineer_id.estimated_hours" => 'required|numeric|min:1',
+                "tasks.$engineer_id.due_date" => 'required|date',
+            ]);
+    
+            Task::create([
+                'project_id' => $project_id,
+                'assigned_to' => $engineer_id,
+                'name' => $task['name'],
+                'description' => $task['description'],
+                'status' => $task['status'],
+                'start_date' => $task['start_date'],
+                'estimated_hours' => $task['estimated_hours'],
+                'due_date' => $task['due_date'],
+            ]);
+        }
+    
+        return redirect()->route('projects.index')->with('success', 'Tasks assigned successfully!');
     }
-
+    
+   
+    
     public function show(Task $task)
     {
         return view('tasks.show', compact('task')); // Show a single task

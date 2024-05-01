@@ -4,60 +4,101 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\User;
+use App\Models\Task;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::all(); // Get all projects
+        $query = Project::query();
+    
+        if ($request->has('search') && $request->search !== '') {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+    
+        $projects = $query->paginate(10);  // You can adjust pagination as needed
+    
         return view('projects.index', compact('projects'));
     }
+   
+
+    
 
     public function create()
     {
-        return view('projects.create'); // Return the form for creating a new project
+        $engineers = User::where('role', 'engineer')->get(); // Adjust based on your user model
+        return view('projects.create', compact('engineers'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+
+        $validatedProject = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'estimated_hours' => 'required|numeric',
+            'start_date' => 'required|date',
+            'due_date' => 'required|date|after:start_date',
+            'estimated_hours' => 'required|numeric|min:0',
             'engineers' => 'required|array',
             'engineers.*' => 'exists:users,id'
         ]);
+        $validatedProject['manager_id'] = auth()->id();
+        // Create the project with the validated data
+        $project = Project::create($validatedProject);
 
-        $project = Project::create($validated);
+        // Attach engineers to the project
         $project->engineers()->sync($request->engineers);
-
-        return redirect()->route('projects.index')->with('success', 'Project created successfully!');
+        $project->save();
+        // Redirect to the project index page with a success message
+        return redirect()->route('projects.assign_tasks', ['project' => $project->id]);
     }
+    public function assignTasks(Project $project)
+    {
+        $engineers = $project->engineers;
+        return view('projects.assign_tasks', ['project_id' => $project->id, 'engineers' => $engineers]);
+    }
+
 
 
     public function show(Project $project)
     {
-        return view('projects.show', compact('project')); // Show a single project
+        // Eager load engineers and their tasks
+        $project = Project::with(['engineers.tasks' => function ($query) use ($project) {
+            $query->where('project_id', $project->id);
+        }])->findOrFail($project->id);
+
+        return view('projects.show', compact('project'));
     }
+
 
     public function edit(Project $project)
     {
-        return view('projects.edit', compact('project')); // Return the edit form
+        $allEngineers = User::where('role', 'engineer')->get(); // Assuming role column defines engineers
+        return view('projects.edit', compact('project', 'allEngineers'));
     }
+
 
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
+            'start_date' => 'required|date|before:due_date',
+            'due_date' => 'required|date|after:start_date',
+            'engineers' => 'nullable|array',
+            'engineers.*' => 'exists:users,id'
+        ], [
+            'start_date.before' => 'The start date must be before the due date.',
+            'due_date.after' => 'The due date must be after the start date.'
         ]);
+    
         $project->update($validated);
-        return redirect()->route('projects.index');
+        return redirect()->route('projects.index')->with('success', 'Project updated successfully!');
     }
 
     public function destroy(Project $project)

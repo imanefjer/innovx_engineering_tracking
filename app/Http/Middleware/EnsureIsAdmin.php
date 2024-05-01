@@ -16,7 +16,7 @@ class EnsureIsAdmin
     public function handle($request, Closure $next)
     {
         if (!auth()->check() || !auth()->user()->isAdministrator()) {
-            abort(403);
+            return redirect('dashboard')->with('error', 'You are not authorized to access this area.');
         }
         return $next($request);
     }
