@@ -44,6 +44,8 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/assign-tasks', [ProjectController::class, 'assignTasks'])->name('projects.assign_tasks');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+    Route::post('/tasks', [TaskController::class, 'store1'])->name('tasks.store1');
+
 
 });
 

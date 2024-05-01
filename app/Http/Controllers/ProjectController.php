@@ -71,8 +71,8 @@ class ProjectController extends Controller
         $project = Project::with(['engineers.tasks' => function ($query) use ($project) {
             $query->where('project_id', $project->id);
         }])->findOrFail($project->id);
-
-        return view('projects.show', compact('project'));
+        $engineers = User::where('role', 'engineer')->get(); // Adjust based on your user model
+        return view('projects.show', compact('project', 'engineers'));
     }
 
 

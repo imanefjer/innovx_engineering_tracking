@@ -44,8 +44,26 @@ class TaskController extends Controller
     
         return redirect()->route('projects.index')->with('success', 'Tasks assigned successfully!');
     }
-    
-   
+    public function store1(Request $request)
+    {
+        $validatedData = $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'assigned_to' => 'required|exists:users,id',
+            'status' => 'required|string',
+            'start_date' => 'required|date',
+            'estimated_hours' => 'required|numeric|min:1',
+            'due_date' => 'required|date',
+        ]);
+
+        $task = new Task($validatedData);
+        $task->save();
+
+        return redirect()->route('projects.show', $validatedData['project_id'])
+                        ->with('success', 'Task added successfully!');
+    }
+
     
     public function show(Task $task)
     {
