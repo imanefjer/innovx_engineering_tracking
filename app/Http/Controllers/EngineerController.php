@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Project;
 
 class EngineerController extends Controller
 {
@@ -24,5 +25,18 @@ class EngineerController extends Controller
           ->get(['id', 'name', 'email']);
 
         return response()->json($engineers);
+    }
+    public function dashboard()
+{
+    $user = auth()->user();  // Fetch the logged-in user
+    $projects = $user->assignedProjects;  // Fetch projects related to the engineer
+    return view('engineers.dashboard', compact('projects'));
+}
+
+
+    public function showProject(Project $project)
+    {
+        $tasks = $project->tasks()->where('assigned_to', auth()->id())->get(); // Ensure you have a relationship or query to get tasks assigned to the engineer
+        return view('engineers.project_detail', compact('project', 'tasks'));
     }
 }

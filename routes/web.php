@@ -4,13 +4,20 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EngineerController;
 
 Route::get('/', function () {
     return view('auth/login');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    if (auth()->user()->role === 'administrator') {
+        return redirect()->route('admin.dashboard');
+    } elseif (auth()->user()->role === 'manager') {
+        return redirect()->route('projects.index');
+    } elseif (auth()->user()->role === 'engineer') {
+        return redirect()->route('engineers.dashboard');
+    }
 })->middleware(['auth', 'verified', 'preventCache'])->name('dashboard'); // Adding caching prevention here as well
 
 // Adding 'preventCache' to existing auth middleware group for user profiles
@@ -48,6 +55,12 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
 
 
 });
+Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
+    Route::get('/engineers/search', [EngineerController::class, 'search'])->name('engineers.search');
+    Route::get('/engineers/dashboard', [EngineerController::class, 'dashboard'])->name('engineers.dashboard');
+    Route::get('/engineers/projects/{project}', [EngineerController::class, 'showProject'])->name('engineers.projects.show');
+});
+
 
 
 require __DIR__.'/auth.php';

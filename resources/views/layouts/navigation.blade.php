@@ -9,8 +9,12 @@
                         <a href="{{ route('admin.dashboard') }}">
                             <img src="{{ asset('images/INNOVX-TTP.png') }}" class="block h-9 w-auto" alt="Company Logo"/>
                         </a>
-                    @else
+                    @elif(auth()->user()->role === 'manager')
                         <a href="{{ route('dashboard') }}">
+                            <img src="{{ asset('images/INNOVX-TTP.png') }}" class="block h-9 w-auto" alt="Company Logo"/>
+                        </a>
+                    @else
+                        <a href="{{ route('engineers.dashboard') }}">
                             <img src="{{ asset('images/INNOVX-TTP.png') }}" class="block h-9 w-auto" alt="Company Logo"/>
                         </a>
                     @endif
@@ -22,9 +26,13 @@
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                @else
+                @elif(auth()->user()->role === 'manager')
 
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                @else
+                    <x-nav-link :href="route('engineers.dashboard')" :active="request()->routeIs('engineers.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 @endif
@@ -39,6 +47,7 @@
                         <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.index')">
                             {{ __('Projects') }}
                         </x-nav-link>
+                    
                     @endif
                 </div>
             </div>

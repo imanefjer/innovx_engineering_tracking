@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'throttle:api',
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
             ],
+            'engineer' => \App\Http\Middleware\EnsureIsEngineer::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
