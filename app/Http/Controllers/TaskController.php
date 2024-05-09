@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Project;
+use App\Models\ProjectAssignment;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -60,15 +62,23 @@ class TaskController extends Controller
         $task = new Task($validatedData);
         $task->save();
 
+        // Check if there is already an assignment, if not, create it
+        $assignment = ProjectAssignment::firstOrCreate([
+            'project_id' => $validatedData['project_id'],
+            'user_id' => $validatedData['assigned_to']
+        ]);
+
         return redirect()->route('projects.show', $validatedData['project_id'])
                         ->with('success', 'Task added successfully!');
     }
+
 
     
     public function show(Task $task)
     {
         return view('tasks.show', compact('task')); // Show a single task
     }
+    
 
     public function edit(Task $task)
     {
@@ -92,4 +102,52 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('tasks.index');
     }
+   
+    public function logTime(Request $request, Task $task)
+{
+    // Prevent logging time if the task is completed
+    if ($task->status === 'Completed') {
+        return back()->withErrors(['msg' => 'Cannot log time on a completed task']);
+    }
+
+    // Validate input data
+    $validated = $request->validate([
+        'hours' => 'required|numeric|min:0.1|max:24',
+        'date' => 'required|date'
+    ]);
+
+    // Create a new time log
+    $task->timeLogs()->create([
+        'user_id' => auth()->id(),
+        'hours' => $validated['hours'],
+        'date' => $validated['date']
+    ]);
+
+    // Update the actual hours in the task table
+    $task->increment('actual_hours', $validated['hours']);
+    $project = $task->project;
+    $project->actual_hours = $project->tasks()->sum('actual_hours');
+    $project->save();
+    return back()->with('success', 'Time logged successfully');
+}
+
+    public function showProject(Project $project)
+    {
+        $tasks = $project->tasks()->with('timeLogs')->get(); // Ensures time logs are loaded with tasks
+        return view('engineers.project_details', compact('project', 'tasks'));
+    }
+    public function complete(Request $request, Task $task)
+    {
+        if ($task->status === 'completed') {
+            return back()->with('error', 'This task is already completed.');
+        }
+
+        $task->status = 'completed';
+        $task->completed_at = now(); // Optionally record the completion time
+        $task->save();
+
+        return redirect()->route('projects.show', $task->project_id)
+                        ->with('success', 'Task marked as completed.');
+    }
+
 }

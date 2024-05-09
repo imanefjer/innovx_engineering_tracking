@@ -14,13 +14,13 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Project::query();
+        $query = Project::where('manager_id', auth()->id());
     
         if ($request->has('search') && $request->search !== '') {
             $query->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('description', 'like', '%' . $request->search . '%');
         }
-    
+        
         $projects = $query->paginate(10);  // You can adjust pagination as needed
     
         return view('projects.index', compact('projects'));

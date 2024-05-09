@@ -138,7 +138,12 @@
                                             <li>{{ $task->name }} - Due: {{ $task->due_date->toFormattedDateString() }}
                                                     <br>Estimated Hours: {{ $task->estimated_hours }}
                                                     <br>Actual Hours: {{ $task->actual_hours }}
-                                                    <br>Status: {{ $task->status }}
+                                                    <br>Status:<span class="badge badge-{{ $task->status == 'completed' ? 'success' : 'warning' }}">{{ $task->status }}</span>
+
+                                                    @if ($task->status == "completed")
+                                                        <br>Completed on: {{ $task->completed_at->toFormattedDateString() }}
+                                                    
+                                                    @endif
                                                 </li>
                                             @endforeach
                                         </ul>

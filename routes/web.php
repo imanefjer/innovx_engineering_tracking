@@ -42,6 +42,7 @@ Route::middleware(['auth', 'admin', 'preventCache'])->group(function () {
     Route::post('/admin/store-user', [AdminController::class, 'store'])->name('admin.store-user');
 });
 Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
+    // Project routes
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
@@ -50,15 +51,21 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/assign-tasks', [ProjectController::class, 'assignTasks'])->name('projects.assign_tasks');
+
+    // Task routes
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-    Route::post('/tasks', [TaskController::class, 'store1'])->name('tasks.store1');
-
-
+    Route::post('/tasks/store1', [TaskController::class, 'store1'])->name('tasks.store1'); // Changed to a unique path
 });
+
+// Remove any duplicate or conflicting route definitions outside this group
+
 Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
     Route::get('/engineers/search', [EngineerController::class, 'search'])->name('engineers.search');
     Route::get('/engineers/dashboard', [EngineerController::class, 'dashboard'])->name('engineers.dashboard');
     Route::get('/engineers/projects/{project}', [EngineerController::class, 'showProject'])->name('engineers.projects.show');
+    Route::post('/tasks/{task}/log-time', [TaskController::class, 'logTime'])->name('tasks.log_time');
+    Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+
 });
 
 

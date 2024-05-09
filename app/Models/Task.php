@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-    protected $dates = ['start_date', 'due_date'];
+
+    protected $dates = ['start_date', 'due_date','completed_at'];
     protected $casts = [
         'start_date' => 'date',
         'due_date' => 'date',
+        'completed_at' => 'date',
     ];
     protected $fillable = ['name', 'description', 'status', 'start_date', 'due_date', 'estimated_hours', 'actual_hours', 'project_id', 'assigned_to'];
 
@@ -24,4 +26,9 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+    public function timeLogs()
+    {
+        return $this->hasMany(TimeLog::class);
+    }
+
 }
