@@ -138,6 +138,7 @@ class TaskController extends Controller
     }
     public function complete(Request $request, Task $task)
     {
+        // toDO - Add validation to ensure the task is not already completed and also check if the task is done the number of hours >0
         if ($task->status === 'completed') {
             return back()->with('error', 'This task is already completed.');
         }
@@ -146,8 +147,33 @@ class TaskController extends Controller
         $task->completed_at = now(); // Optionally record the completion time
         $task->save();
 
-        return redirect()->route('projects.show', $task->project_id)
-                        ->with('success', 'Task marked as completed.');
+        return back()->with('success', 'Task marked as completed.');
     }
+    public function updateStatus(Request $request, Task $task)
+    {
+       $validated = $request->validate([
+            'status' => 'required|string|in:in progress'
+        ]);
+        \Log::info('Status update requested', ['task_id' => $task->id, 'requested_status' => $request->status]);
+    
+        if ($task->status === 'pending' && $validated['status'] === 'in progress') {
+            $task->status = $request->status;
+            $task->save();
+    
+            \Log::info('Status updated successfully', ['task_id' => $task->id, 'new_status' => $task->status]);
+    
+            return back()->with('success', 'Task started successfully!');
+        }
+    
+        \Log::error('Failed to update status', ['task_id' => $task->id, 'requested_status' => $request->status]);
+    
+        return back()->withError('Invalid operation.');
+    }
+    
+    
+    
+
+
+
 
 }

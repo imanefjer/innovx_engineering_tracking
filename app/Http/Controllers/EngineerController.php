@@ -31,7 +31,9 @@ class EngineerController extends Controller
     {
         $user = auth()->user();  // Fetch the logged-in user
         $projects = $user->assignedProjects;  // Fetch projects related to the engineer
-        return view('engineers.dashboard', compact('projects'));
+        $tasks = $user->tasks()->with('project')->get()->groupBy('status');
+
+        return view('engineers.dashboard', compact('projects', 'tasks'));
     }
 
 

@@ -125,31 +125,32 @@
                         <div class="alert alert-info">No engineers assigned to this project.</div>
                     @else
                         <div class="list-group">
-                            @foreach ($project->engineers as $engineer)
-                                <div class="list-group-item list-group-item-action flex-column align-items-start mb-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1">{{ $engineer->name }}</h5>
-                                        <small>{{ $engineer->email }}</small>
-                                    </div>
-                                    <p class="mb-1">
-                                        <strong>Tasks:</strong>
-                                        <ul class="list-unstyled">
-                                            @foreach ($engineer->tasks as $task)
-                                            <li>{{ $task->name }} - Due: {{ $task->due_date->toFormattedDateString() }}
-                                                    <br>Estimated Hours: {{ $task->estimated_hours }}
-                                                    <br>Actual Hours: {{ $task->actual_hours }}
-                                                    <br>Status:<span class="badge badge-{{ $task->status == 'completed' ? 'success' : 'warning' }}">{{ $task->status }}</span>
-
-                                                    @if ($task->status == "completed")
-                                                        <br>Completed on: {{ $task->completed_at->toFormattedDateString() }}
-                                                    
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </p>
+                        @foreach ($project->engineers as $engineer)
+                        <div class="card mb-3">
+                            <div class="card-header bg-info text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">{{ $engineer->name }}</h5>
+                                    <small>{{ $engineer->email }}</small>
                                 </div>
-                            @endforeach
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                @forelse ($engineer->tasks as $task)
+                                    <li class="list-group-item">
+                                        <h6>{{ $task->name }}</h6>
+                                        <div>Due: {{ $task->due_date->toFormattedDateString() }}</div>
+                                        <div>Estimated Hours: {{ $task->estimated_hours }}</div>
+                                        <div>Actual Hours: {{ $task->actual_hours }}</div>
+                                        <div>Status: <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'warning') }}">{{ $task->status }}</span></div>
+                                        @if ($task->status == "completed" && $task->completed_at)
+                                            <div>Completed on: {{ $task->completed_at->toFormattedDateString() }}</div>
+                                        @endif
+                                    </li>
+                                @empty
+                                    <li class="list-group-item">No tasks assigned.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    @endforeach
                         </div>
                     @endif
                 </div>

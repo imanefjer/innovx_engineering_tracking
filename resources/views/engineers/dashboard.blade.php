@@ -6,7 +6,7 @@
     <div class="list-group">
         @forelse ($projects as $project)
             <a href="{{ route('engineers.projects.show', $project->id) }}" class="list-group-item list-group-item-action">
-                {{ $project->name }}
+                {{ $project->name }}                
             </a>
         @empty
             <p>No projects currently assigned.</p>

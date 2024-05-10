@@ -51,15 +51,13 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/assign-tasks', [ProjectController::class, 'assignTasks'])->name('projects.assign_tasks');
-
     // Task routes
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::post('/tasks/store1', [TaskController::class, 'store1'])->name('tasks.store1'); // Changed to a unique path
 });
 
-// Remove any duplicate or conflicting route definitions outside this group
-
 Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
+    Route::patch('/tasks/{task}/updateStatus', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
     Route::get('/engineers/search', [EngineerController::class, 'search'])->name('engineers.search');
     Route::get('/engineers/dashboard', [EngineerController::class, 'dashboard'])->name('engineers.dashboard');
     Route::get('/engineers/projects/{project}', [EngineerController::class, 'showProject'])->name('engineers.projects.show');
@@ -67,6 +65,7 @@ Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
 
 });
+
 
 
 

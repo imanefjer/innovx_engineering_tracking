@@ -1,15 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container mb-4">
     <h2 class="mt-4 mb-4">{{ $project->name }} - Tasks</h2>
-    <div class="list-group">
-        @foreach ($tasks as $task)
-            <div class="list-group-item">
+    @foreach(['Pending', 'In Progress', 'Completed'] as $status)
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <h2 class="mb-0">{{ ucwords($status) }}</h2>
+            </div>
+            <ul class="list-group list-group-flush">
+                @forelse($tasks->where('status', strtolower($status)) as $task)
+                    <li class="list-group-item">
+                    <div class="list-group-item">
                 <h5 class="mb-1">{{ $task->name }}</h5>
                 <p class="mb-1">Due on {{ $task->due_date->toFormattedDateString() }}</p>
-                <p class="mb-2"><strong>Status:</strong> <span class="badge badge-{{ $task->status == 'completed' ? 'success' : 'warning' }}">{{ $task->status }}</span></p>
-                
+                <p class="mb-2"><strong>Status:</strong> <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'warning') }}">{{ $task->status }}</span>
+
                 <p class="mb-2">Total Hours Logged: <strong>{{ $task->timeLogs->sum('hours') }} hours</strong></p>
 
                 <!-- List all time logs for this task -->
@@ -22,7 +28,7 @@
                 @endif
 
                 <!-- Log time form -->
-                @if($task->status !== 'completed')
+                @if($task->status == 'in progress')
                     <div class="card card-body mt-2">
                         <h6 class="mb-2">Log Time:</h6>
                         <form action="{{ route('tasks.log_time', $task->id) }}" method="POST">
@@ -39,15 +45,33 @@
                                 </div>
                             </div>
                         </form>
+                       
                     </div>
-                    <form method="POST" action="{{ route('tasks.complete', $task->id) }}" style="display:inline;">
+                     <form action="{{ route('tasks.complete', $task->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status" value="completed">
+                            <button type="submit" class="btn btn-sm btn-success mt-2">Complete Task</button>
+                        </form>
+                @endif
+                @if($task->status === 'pending')
+                    <form action="{{ route('tasks.updateStatus', $task->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" class="btn btn-success mt-2">Set as Completed</button>
+                        <input type="hidden" name="status" value="in progress">
+                        <button type="submit" class="btn btn-sm btn-primary ">Start Task</button>
                     </form>
                 @endif
             </div>
-        @endforeach
-    </div>
+                       
+                        
+                       
+                @empty
+                    <li class="list-group-item">No tasks under {{ $status }}</li>
+                @endforelse
+            </ul>
+        </div>
+    @endforeach
+    
 </div>
 @endsection
