@@ -30,6 +30,10 @@
                             <label for="due_date">Due Date</label>
                             <input type="date" class="form-control" id="due_date" name="due_date" value="{{ old('due_date', $project->due_date->toDateString()) }}">
                         </div>
+                        <div class ="form-group">
+                            <label for ="estimated_hours">Estimated hours</label>
+                            <input type="number" class="form-control" id="estimated_hours" name="estimated_hours" value="{{ $project->estimated_hours }}" step="any" required>
+                        </div>
                         <div class="form-group">
                             <label for="engineers">Assign Engineers</label>
                             <select multiple class="form-control" id="engineers" name="engineers[]">

@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section("extra-css")
+<link href="css/app.css" rel="stylesheet">
+@endsection
 @section('content')
 <div class="container mt-5">
 @if ($errors->any())
@@ -16,34 +18,38 @@
             <h1 class="h3 mb-0">Project Details: {{ $project->name }}</h1>
         </div>
         <div class="card-body">
-            <div class="row mb-4">
-                <div class="col-md-12">
+             <div class="row mb-3">
+                <div class="col-md-6">
                     <h5 class="font-weight-bold">Description:</h5>
                     <p>{{ $project->description }}</p>
                 </div>
+                <div class="col-md-6">
+                    <h5 class="font-weight-bold">Completion Percentage:</h5>
+                    <div class="progress" style="height: 30px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ max($completionPercentage, 10) }}%; min-width: 30px;" aria-valuenow="{{ $completionPercentage }}" aria-valuemin="0" aria-valuemax="100">{{ number_format($completionPercentage, 2) }}%</div>
+                    </div>
+                </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-md-4">
+            <div class="row mb-3">
+                <div class="col-md-3">
                     <h5 class="font-weight-bold">Start Date:</h5>
                     <p>{{ $project->start_date->toFormattedDateString() }}</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h5 class="font-weight-bold">Due Date:</h5>
                     <p>{{ $project->due_date->toFormattedDateString() }}</p>
                 </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h5 class="font-weight-bold">Estimated Hours:</h5>
                     <p>{{ $project->estimated_hours }}</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h5 class="font-weight-bold">Actual Hours:</h5>
                     <p>{{ $project->actual_hours }}</p>
                 </div>
             </div>
             <div class="row mb-4">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <h3 class="font-weight-bold m-3">Assigned Engineers</h3>
                 </div>
                 <div class="col-md-4">
@@ -52,6 +58,7 @@
                     </button>
                 </div>
             </div>
+            
 
             <div class="modal fade" id="addTaskModal">
                 <div class="modal-dialog">
@@ -90,14 +97,9 @@
                                     <label for="estimated_hours">Estimated Hours:</label>
                                     <input type="number" class="form-control" id="estimated_hours" name="estimated_hours" required min="1" step="0.01">
                                 </div>
-                                <div class="form-group">
-                                    <label for="status">Status:</label>
-                                    <select class="form-control" id="status" name="status" required>
-                                        <option value="pending">Pending</option>
-                                        <option value="in_progress">In Progress</option>
-                                        <option value="completed">Completed</option>
-                                    </select>
-                                </div>
+                                
+                                <input type="hidden" id="status" name="status"  value="pending">
+
                                 <div class="form-group">
                                     <label for="start_date">Start Date:</label>
                                     <input type="date" class="form-control" id="start_date" name="start_date" required>

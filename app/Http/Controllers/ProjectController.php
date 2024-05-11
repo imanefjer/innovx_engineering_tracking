@@ -9,9 +9,7 @@ use App\Models\Task;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(Request $request)
     {
         $query = Project::where('manager_id', auth()->id());
@@ -63,16 +61,18 @@ class ProjectController extends Controller
         return view('projects.assign_tasks', ['project_id' => $project->id, 'engineers' => $engineers]);
     }
 
-
-
+    
     public function show(Project $project)
     {
+        $totalTasks = $project->tasks->count();
+        $completedTasks = $project->tasks->where('status', 'completed')->count();
+        $completionPercentage = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
         // Eager load engineers and their tasks
         $project = Project::with(['engineers.tasks' => function ($query) use ($project) {
             $query->where('project_id', $project->id);
         }])->findOrFail($project->id);
         $engineers = User::where('role', 'engineer')->get(); // Adjust based on your user model
-        return view('projects.show', compact('project', 'engineers'));
+        return view('projects.show', compact('project', 'engineers', 'completionPercentage'));
     }
 
 
@@ -91,7 +91,8 @@ class ProjectController extends Controller
             'start_date' => 'required|date|before:due_date',
             'due_date' => 'required|date|after:start_date',
             'engineers' => 'nullable|array',
-            'engineers.*' => 'exists:users,id'
+            'engineers.*' => 'exists:users,id',
+            'estimated_hours' => 'required|numeric|min:0'
         ], [
             'start_date.before' => 'The start date must be before the due date.',
             'due_date.after' => 'The due date must be after the start date.'

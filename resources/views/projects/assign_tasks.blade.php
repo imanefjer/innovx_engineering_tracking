@@ -27,36 +27,26 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="taskName">Task Name</label>
-                                <input type="text" class="form-control border border-muted" id="taskName" name="tasks[{{ $engineer->id }}][name]" required>
+                                <input type="text" class="form-control" id="taskName" name="tasks[{{ $engineer->id }}][name]" required>
                             </div>
                             <div class="form-group">
                                 <label for="taskDescription">Task Description</label>
                                 <textarea class="form-control" id="taskDescription" name="tasks[{{ $engineer->id }}][description]" required></textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="taskStatus">Status</label>
-                                <select class="form-control" id="taskStatus" name="tasks[{{ $engineer->id }}][status]" required>
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </select>
-                            </div>
+                            <input type="hidden" name="tasks[{{ $engineer->id }}][status]" value="pending">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="startDate">Start Date</label>
-                                    <input type="date" class="form-control border border-muted"" id="startDate" name="tasks[{{ $engineer->id }}][start_date]" required>
+                                    <input type="date" class="form-control" id="startDate" name="tasks[{{ $engineer->id }}][start_date]" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="dueDate">Due Date</label>
-                                    <input type="date" class="form-control border border-muted"" id="dueDate" name="tasks[{{ $engineer->id }}][due_date]" required>
+                                    <input type="date" class="form-control" id="dueDate" name="tasks[{{ $engineer->id }}][due_date]" required>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="estimatedHours">Estimated Hours</label>
-                                    <input type="number" class="form-control border border-muted"" id="estimatedHours" name="tasks[{{ $engineer->id }}][estimated_hours]" required min="1" step="0.01">
-                                </div>
-                                <!-- Add more fields here if needed -->
+                            <div class="form-group">
+                                <label for="estimatedHours">Estimated Hours</label>
+                                <input type="number" class="form-control" id="estimatedHours" name="tasks[{{ $engineer->id }}][estimated_hours]" required min="1" step="0.01">
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,95 @@
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+}
+
+/* Container adjustments for better alignment and spacing */
+.container {
+    max-width: 1200px;
+}
+
+/* Header styles for clarity and impact */
+h1 {
+    font-size: 24px;
+    color: #0a4a6d;
+}
+
+/* Button styling for better UI consistency */
+.btn-primary {
+    background-color: #0056b3;
+    border: none;
+}
+
+.btn-outline-primary {
+    color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Card styling for a cleaner, more modern look */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-text {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Improving the search bar appearance */
+.input-group {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.input-group .form-control {
+    border: 1px solid #ced4da;
+}
+
+.input-group .btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .h1, .h3 {
+        font-size: 20px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .input-group .form-control,
+    .input-group .btn-secondary {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .input-group .btn-secondary {
+        width: auto;
+        margin-bottom: 0;
+    }
+}

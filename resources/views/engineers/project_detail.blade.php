@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mb-4">
-    <h2 class="mt-4 mb-4">{{ $project->name }} - Tasks</h2>
+    <h2 class="mt-4 mb-4 text-secondary">{{ $project->name }} - Tasks Overview</h2>
     @foreach(['Pending', 'In Progress', 'Completed'] as $status)
         <div class="card mb-3">
             <div class="card-header bg-info text-white">
