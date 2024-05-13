@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-4">
                 @if($project->engineers->isEmpty())
                     <div class="col-12">
                         <div class="alert alert-info">No engineers assigned to this project.</div>
