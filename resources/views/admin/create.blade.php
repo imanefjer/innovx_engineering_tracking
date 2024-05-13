@@ -11,7 +11,16 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.store-user') }}">
                         @csrf
-
+                        <!-- errors -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="form-group mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control rounded" id="name" name="name" required>
