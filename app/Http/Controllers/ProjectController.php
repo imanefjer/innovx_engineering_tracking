@@ -61,21 +61,37 @@ class ProjectController extends Controller
         return view('projects.assign_tasks', ['project_id' => $project->id, 'engineers' => $engineers]);
     }
 
-    
+
     public function show(Project $project)
     {
         $totalTasks = $project->tasks->count();
         $completedTasks = $project->tasks->where('status', 'completed')->count();
         $completionPercentage = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
-        // Eager load engineers and their tasks
-        $project = Project::with(['engineers.tasks' => function ($query) use ($project) {
-            $query->where('project_id', $project->id);
-        }])->findOrFail($project->id);
+        $completedTasks = $project->tasks->where('status', 'completed')->count();
+        $inProgressTasks = $project->tasks->where('status', 'in progress')->count();
+        $pendingTasks = $project->tasks->where('status', 'pending')->count();
+        // Properly pass the $project variable to nested closures
+        $project->load(['engineers' => function ($query) use ($project) {
+            $query->with(['tasks' => function ($query) use ($project) {
+                $query->where('project_id', $project->id);
+            }]);
+        }]);
+
         $engineers = User::where('role', 'engineer')->get(); // Adjust based on your user model
-        return view('projects.show', compact('project', 'engineers', 'completionPercentage'));
+
+        // Prepare data for visualization or further processing
+        $engineerContributions = [];
+        foreach ($project->engineers as $engineer) {
+            $engineerContributions[$engineer->name] = [
+                'estimated' => $engineer->tasks->sum('estimated_hours'),
+                'actual' => $engineer->tasks->sum('actual_hours')
+            ];
+        }
+
+        return view('projects.show', compact('project', 'engineers', 'completionPercentage', 'engineerContributions', 'completedTasks', 'inProgressTasks', 'pendingTasks', 'totalTasks'));
     }
 
-
+    
     public function edit(Project $project)
     {
         $allEngineers = User::where('role', 'engineer')->get(); // Assuming role column defines engineers
