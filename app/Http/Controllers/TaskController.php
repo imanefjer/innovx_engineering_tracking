@@ -9,6 +9,7 @@ use App\Notifications\TaskAssigned;
 use App\Models\User;
 use App\Models\Notification;
 
+
 class TaskController extends Controller
 {
     public function index()
@@ -45,12 +46,11 @@ class TaskController extends Controller
                 'estimated_hours' => $task['estimated_hours'],
                 'due_date' => $task['due_date'],
             ]);
-
-            $engineer = User::find($engineer_id);
-            if ($engineer) {
-                $engineer->notify(new TaskAssigned($newTask));
-            }
+            $user = User::findOrFail($engineer_id); // Ensure the user exists
+            $user->notify(new TaskAssigned($newTask));
         }
+        
+        
 
         return redirect()->route('projects.index')->with('success', 'Tasks assigned successfully!');
     }

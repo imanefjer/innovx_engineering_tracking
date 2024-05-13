@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            $table->string('type')->after('user_id'); // Adding a type column
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->id();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
+            $table->timestamps();
         });
-        
     }
 
     /**
@@ -22,9 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            //        $table->dropColumn('type');
-
-        });
+        Schema::dropIfExists('notifications');
     }
 };

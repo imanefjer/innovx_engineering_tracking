@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
+    use HasFactory ;
 
     /**
      * The attributes that are mass assignable.
@@ -38,7 +40,13 @@ class User extends Authenticatable
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class);
+        return $this->morphMany(Notification::class, 'notifiable');
+    
+    }
+    public function unreadNotifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable')
+                    ->whereNull('read_at');
     }
 
     public function messagesSent()
@@ -86,8 +94,9 @@ class User extends Authenticatable
     }
    
     public function assignedProjects()
-{
-    return $this->belongsToMany(Project::class, 'project_assignments', 'user_id', 'project_id');
-}
+    {
+        return $this->belongsToMany(Project::class, 'project_assignments', 'user_id', 'project_id');
+    }
+   
 
 }

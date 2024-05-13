@@ -18,10 +18,7 @@ return array(
     'App\\Http\\Controllers\\Auth\\VerifyEmailController' => $baseDir . '/app/Http/Controllers/Auth/VerifyEmailController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\EngineerController' => $baseDir . '/app/Http/Controllers/EngineerController.php',
-<<<<<<< HEAD
     'App\\Http\\Controllers\\NotificationController' => $baseDir . '/app/Http/Controllers/NotificationController.php',
-=======
->>>>>>> 1389b1d572962e3b0a32857229ff3aa02bf54cc4
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\ProjectController' => $baseDir . '/app/Http/Controllers/ProjectController.php',
     'App\\Http\\Controllers\\TaskController' => $baseDir . '/app/Http/Controllers/TaskController.php',
@@ -38,6 +35,7 @@ return array(
     'App\\Models\\Task' => $baseDir . '/app/Models/Task.php',
     'App\\Models\\TimeLog' => $baseDir . '/app/Models/TimeLog.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Notifications\\TaskAssigned' => $baseDir . '/app/Notifications/TaskAssigned.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\View\\Components\\AppLayout' => $baseDir . '/app/View/Components/AppLayout.php',
     'App\\View\\Components\\GuestLayout' => $baseDir . '/app/View/Components/GuestLayout.php',

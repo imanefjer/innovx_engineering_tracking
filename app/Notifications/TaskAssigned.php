@@ -1,25 +1,25 @@
 <?php
-
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Models\Task; // Make sure to import the Task model if not already imported
 
 class TaskAssigned extends Notification
 {
     use Queueable;
-    private $task;
 
-    public function __construct($task)
+    protected $task;
+
+    public function __construct(Task $task)
     {
         $this->task = $task;
     }
 
     public function via($notifiable)
     {
-        return ['database']; // This specifies that the notification is sent to the database
+        return ['database'];
     }
 
     public function toArray($notifiable)
@@ -27,7 +27,15 @@ class TaskAssigned extends Notification
         return [
             'message' => 'You have been assigned a new task: ' . $this->task->name,
             'task_id' => $this->task->id,
-            'project_id' => $this->task->project_id
         ];
     }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'task_id' => $this->task->id,
+            'message' => 'You have been assigned a new task: ' . $this->task->name,
+        ];
+    }
+
 }
