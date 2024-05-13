@@ -4,7 +4,6 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
-
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -47,5 +46,16 @@
         </div>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
         @yield('extra-js')
+        <script>
+        setInterval(() => {
+            fetch('/path-to-get-notification-count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('notificationCount').textContent = data.unreadCount;
+                });
+        }, 10000); // Update every 10 seconds
+        </script>
+
     </body>
+    
 </html>

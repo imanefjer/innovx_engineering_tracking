@@ -9,10 +9,12 @@ class Notification extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'message', 'status', 'notification_date'];
-
-    public function user()
+    protected $fillable = ['user_id', 'message', 'type', 'status', 'notification_date'];
+    protected $casts = [
+        'notification_date' => 'datetime',
+    ];
+    public function notifiable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

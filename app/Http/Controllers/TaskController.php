@@ -5,6 +5,9 @@ use App\Models\Task;
 use App\Models\Project;
 use App\Models\ProjectAssignment;
 use Illuminate\Http\Request;
+use App\Notifications\TaskAssigned;
+use App\Models\User;
+use App\Models\Notification;
 
 class TaskController extends Controller
 {
@@ -31,21 +34,27 @@ class TaskController extends Controller
                 "tasks.$engineer_id.estimated_hours" => 'required|numeric|min:1',
                 "tasks.$engineer_id.due_date" => 'required|date',
             ]);
-    
-            Task::create([
+
+            $newTask = Task::create([
                 'project_id' => $project_id,
                 'assigned_to' => $engineer_id,
                 'name' => $task['name'],
                 'description' => $task['description'],
-                'status' => $task['status'],
+                'status' => 'pending', // Set status to pending automatically
                 'start_date' => $task['start_date'],
                 'estimated_hours' => $task['estimated_hours'],
                 'due_date' => $task['due_date'],
             ]);
+
+            $engineer = User::find($engineer_id);
+            if ($engineer) {
+                $engineer->notify(new TaskAssigned($newTask));
+            }
         }
-    
+
         return redirect()->route('projects.index')->with('success', 'Tasks assigned successfully!');
     }
+
     public function store1(Request $request)
     {
         $validatedData = $request->validate([
@@ -62,11 +71,21 @@ class TaskController extends Controller
         $task = new Task($validatedData);
         $task->save();
 
+        
         // Check if there is already an assignment, if not, create it
         $assignment = ProjectAssignment::firstOrCreate([
             'project_id' => $validatedData['project_id'],
             'user_id' => $validatedData['assigned_to']
         ]);
+        $notification = Notification::create([
+            'user_id' => $validatedData['assigned_to'],
+            'message' => 'You have been assigned a new task.',
+            'status' => 'unread',
+            'type' => 'task_assigned',
+            'notification_date' => now(),
+        ]);
+        $assignedEngineer = User::find($validatedData['assigned_to']); // Ensure you retrieve the assigned engineer's instance
+        Notification::send($assignedEngineer, new TaskAssigned($task));
 
         return redirect()->route('projects.show', $validatedData['project_id'])
                         ->with('success', 'Task added successfully!');

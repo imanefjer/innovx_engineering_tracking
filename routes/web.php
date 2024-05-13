@@ -5,8 +5,12 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EngineerController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
+    if(auth()->check()) {
+        return redirect()->route('dashboard');
+    }
     return view('auth/login');
 });
 
@@ -54,6 +58,7 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
     // Task routes
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::post('/tasks/store1', [TaskController::class, 'store1'])->name('tasks.store1'); // Changed to a unique path
+
 });
 
 Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
@@ -63,7 +68,6 @@ Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
     Route::get('/engineers/projects/{project}', [EngineerController::class, 'showProject'])->name('engineers.projects.show');
     Route::post('/tasks/{task}/log-time', [TaskController::class, 'logTime'])->name('tasks.log_time');
     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
-
 });
 
 

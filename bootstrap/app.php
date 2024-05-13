@@ -17,9 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureIsAdmin::class,
             'manager' => \App\Http\Middleware\EnsureIsManager::class,
             'api' => [
+                \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
                 'throttle:api',
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ],
+            ],            
             'engineer' => \App\Http\Middleware\EnsureIsEngineer::class,
         ]);
     })

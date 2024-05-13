@@ -52,9 +52,29 @@
                     @endif
                 </div>
             </div>
-
+            
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <x-dropdown align="right" width="48">
+                <x-slot name="trigger">
+                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <i class="fa fa-bell"></i>
+                        <span class="badge badge-danger" id="notificationCount">{{ auth()->user()->unreadNotifications->count() }}</span>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content" id="notificationDropdown">
+                    @forelse (auth()->user()->unreadNotifications as $notification)
+                        <x-dropdown-link href="{{ $notification->data['url'] }}">
+                            {!! $notification->data['message'] !!}
+                        </x-dropdown-link>
+                    @empty
+                        <x-dropdown-link href="#">
+                            No notifications
+                        </x-dropdown-link>
+                    @endforelse
+                </x-slot>
+            </x-dropdown>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
