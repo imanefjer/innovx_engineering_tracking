@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Project;
-use App\Models\Notification;
 class EngineerController extends Controller
 {
     /**
@@ -42,22 +41,6 @@ class EngineerController extends Controller
         $tasks = $project->tasks()->where('assigned_to', auth()->id())->get(); // Ensure you have a relationship or query to get tasks assigned to the engineer
         return view('engineers.project_detail', compact('project', 'tasks'));
     }
-    public function notifications()
-    {
-        $user = auth()->user();
-        $notifications = $user->notifications; // Assuming your User model is correctly linked to the Notification model
-
-        return view('engineers.notifications', compact('notifications'));
-    }
-    public function markNotificationAsRead($notificationId)
-    {
-        $notification = Notification::findOrFail($notificationId);
-        if ($notification->user_id === auth()->id()) {
-            $notification->update(['status' => 'read']);
-            return back()->with('success', 'Notification marked as read.');
-        }
-        return back()->with('error', 'You do not have permission to mark this notification as read.');
-    }
-
+   
 
 }

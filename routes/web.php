@@ -5,7 +5,6 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EngineerController;
-use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     if(auth()->check()) {
@@ -68,6 +67,8 @@ Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {
     Route::get('/engineers/projects/{project}', [EngineerController::class, 'showProject'])->name('engineers.projects.show');
     Route::post('/tasks/{task}/log-time', [TaskController::class, 'logTime'])->name('tasks.log_time');
     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+    Route::get('/tasks/pending', [TaskController::class, 'showPending'])->name('tasks.pending');
+
 });
 
 

@@ -59,26 +59,25 @@
                 <x-slot name="trigger">
                     <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                         <i class="fa fa-bell"></i>
-                        <span class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        <!-- Display the count of pending tasks directly -->
+                        <span class="badge badge-danger">{{ $pendingTasksCount }}</span>
                     </button>
                 </x-slot>
 
-                <x-slot name="content" id="notificationDropdown">
-                    
-                    @forelse (auth()->user()->unreadNotifications as $notification)
-                        @php
-                            $decodedData = json_decode($notification);
-                        @endphp
-                        <x-dropdown-link>
-                            {!! $notification->data!!}
-                        </x-dropdown-link>          
-                    @empty
-                        <x-dropdown-link href="#">
-                            No notifications
-                        </x-dropdown-link>
-                    @endforelse
+                <x-slot name="content">
+                    <div id="notificationDropdown">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('tasks.pending') }}">
+                                    Pending Tasks
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </x-slot>
             </x-dropdown>
+
+
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">

@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class User extends Authenticatable
 {
@@ -36,17 +35,6 @@ class User extends Authenticatable
     public function projectAssignments()
     {
         return $this->hasMany(ProjectAssignment::class);
-    }
-
-    public function notifications()
-    {
-        return $this->morphMany(Notification::class, 'notifiable');
-    
-    }
-    public function unreadNotifications(): MorphMany
-    {
-        return $this->morphMany(Notification::class, 'notifiable')
-                    ->whereNull('read_at');
     }
 
     public function messagesSent()
