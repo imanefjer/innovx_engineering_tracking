@@ -19,3 +19,14 @@ export default {
 
     plugins: [forms],
 };
+
+module.exports = {
+    theme: {
+        extend: {
+            colors: {
+                'badge-primary': '#3490dc', // blue
+                'badge-warning': '#ffed4a', // yellow
+            }
+        }
+    }
+}

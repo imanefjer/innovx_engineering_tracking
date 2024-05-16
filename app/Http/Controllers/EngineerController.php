@@ -26,15 +26,31 @@ class EngineerController extends Controller
 
         return response()->json($engineers);
     }
+
     public function dashboard()
     {
         $user = auth()->user();  // Fetch the logged-in user
         $projects = $user->assignedProjects;  // Fetch projects related to the engineer
+    
+        // Enhance projects with task status counts specific to this engineer
+        $projects->each(function ($project) use ($user) {
+            $project->in_progress_tasks_count = $project->tasks()
+                ->where('status', 'in progress')
+                ->where('assigned_to', $user->id)  // Ensure tasks are assigned to this engineer
+                ->count();
+            $project->pending_tasks_count = $project->tasks()
+                ->where('status', 'pending')
+                ->where('assigned_to', $user->id)  // Ensure tasks are assigned to this engineer
+                ->count();
+        });
+    
+        // Retrieve only tasks assigned to this engineer, grouped by status
         $tasks = $user->tasks()->with('project')->get()->groupBy('status');
-
+    
         return view('engineers.dashboard', compact('projects', 'tasks'));
     }
-
+    
+    
 
     public function showProject(Project $project)
     {

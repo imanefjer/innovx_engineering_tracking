@@ -2,26 +2,27 @@
 
 @section('content')
 <div class="container mt-5">
-    <h1 class="mb-4 text-center">My Assigned Projects</h1>
-    <div class="row justify-content-center">
+    <h1 class="text-center mb-4">My Assigned Projects</h1>
+    <div class="row">
         @forelse ($projects as $project)
-            <div class="col-md-8 col-lg-6 mb-4">
-                <!-- Card with hover effect and more padding -->
-                <div class="card border-left-primary shadow h-100 py-2">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Project
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $project->name }}</div>
-                                <p class="text-muted mt-2 mb-0">{{ $project->description }}</p>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-folder-open fa-2x text-gray-300"></i>
-                            </div>
+                        <h5 class="card-title font-weight-bold">{{ $project->name }}</h5>
+                        <p class="card-text">{{ $project->description }}</p>
+                        <ul class="list-unstyled mb-3">
+                            <li><strong>Start:</strong> {{ $project->start_date->toFormattedDateString() }}</li>
+                            <li><strong>End:</strong> {{ $project->due_date->toFormattedDateString() }}</li>
+                        </ul>
+                        <div>
+                            <span class="badge badge-primary">{{ $project->in_progress_tasks_count }} In Progress</span>
+                            <span class="badge badge-warning">{{ $project->pending_tasks_count }} Pending</span>
                         </div>
-                        <a href="{{ route('engineers.projects.show', $project->id) }}" class="stretched-link"></a>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ route('engineers.projects.show', $project->id) }}" class="btn btn-primary">
+                            View Project
+                        </a>
                     </div>
                 </div>
             </div>
