@@ -53,7 +53,12 @@ class TaskController extends Controller
 
     public function showPending()
     {
-        $pendingTasks = Task::where('status', 'pending')->get();
+        $currentUserId = auth()->id();  // Get the ID of the currently authenticated user
+
+        $pendingTasks = Task::where('status', 'pending')
+                            ->where('assigned_to', $currentUserId)
+                            ->get();
+
         return view('tasks.pending', compact('pendingTasks'));
     }
     public function store1(Request $request)

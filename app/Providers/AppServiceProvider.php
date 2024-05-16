@@ -19,10 +19,16 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot()
-{
-    View::composer('*', function ($view) {
-        $pendingTasksCount = Task::where('status', 'pending')->count();
-        $view->with('pendingTasksCount', $pendingTasksCount);
-    });
-}
+    {
+        View::composer('*', function ($view) {
+            if (auth()->check()) {  // Check if the user is logged in
+                $pendingTasksCount = Task::where('status', 'pending')
+                                         ->where('assigned_to', auth()->id())
+                                         ->count();
+                $view->with('pendingTasksCount', $pendingTasksCount);
+            } else {
+                $view->with('pendingTasksCount', 0);  // No pending tasks if no user is logged in
+            }
+        });
+    }
 }
