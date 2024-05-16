@@ -231,6 +231,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         },
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tasks Distribution'
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
         }
@@ -276,6 +282,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 display: true,
                 position: 'top'
             },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Estimated VS Actual Hours'
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
         }
@@ -306,6 +318,12 @@ document.addEventListener('DOMContentLoaded', function () {
             legend: {
                 display: true,
                 position: 'right'
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Engineers Total Contribution'
+                }
             },
             responsive: true,
             maintainAspectRatio: false,
