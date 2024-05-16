@@ -182,7 +182,7 @@
                                                 <p class="mb-1">Due: {{ $task->due_date->toFormattedDateString() }}</p>
                                                 <p class="mb-1">Estimated Hours: {{ $task->estimated_hours }}</p>
                                                 <p class="mb-1">Actual Hours: {{ $task->actual_hours }}</p>
-                                                <p class="mb-2">Status: <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'warning') }}">{{ $task->status }}</span></p>
+                                                <p class="mb-2">Status: <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'danger') }}">{{ $task->status }}</span></p>
                                                 @if ($task->status == "completed" && $task->completed_at)
                                                     <p class="mb-0">Completed on: {{ $task->completed_at->toFormattedDateString() }}</p>
                                                 @endif

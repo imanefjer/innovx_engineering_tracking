@@ -14,7 +14,7 @@
                     <div class="list-group-item">
                 <h5 class="mb-1">{{ $task->name }}</h5>
                 <p class="mb-1">Due on {{ $task->due_date->toFormattedDateString() }}</p>
-                <p class="mb-2"><strong>Status:</strong> <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'warning') }}">{{ $task->status }}</span>
+                <p class="mb-2"><strong>Status:</strong> <span class="badge badge-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in progress' ? 'primary' : 'danger') }}">{{ $task->status }}</span>
 
                 <p class="mb-2">Total Hours Logged: <strong>{{ $task->timeLogs->sum('hours') }} hours</strong></p>
 
