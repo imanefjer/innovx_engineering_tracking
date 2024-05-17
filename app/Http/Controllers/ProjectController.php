@@ -91,32 +91,42 @@ class ProjectController extends Controller
         return view('projects.show', compact('project', 'engineers', 'completionPercentage', 'engineerContributions', 'completedTasks', 'inProgressTasks', 'pendingTasks', 'totalTasks'));
     }
 
-    
+
     public function edit(Project $project)
     {
-        $allEngineers = User::where('role', 'engineer')->get(); // Assuming role column defines engineers
-        return view('projects.edit', compact('project', 'allEngineers'));
+        $assignedEngineers = $project->engineers->pluck('id')->toArray();
+        $unassignedEngineers = User::where('role', 'engineer')->whereNotIn('id', $assignedEngineers)->get();;
+        return view('projects.edit', compact('project', 'unassignedEngineers'));
     }
-
 
     public function update(Request $request, Project $project)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_date' => 'required|date|before:due_date',
-            'due_date' => 'required|date|after:start_date',
-            'engineers' => 'nullable|array',
-            'engineers.*' => 'exists:users,id',
-            'estimated_hours' => 'required|numeric|min:0'
-        ], [
-            'start_date.before' => 'The start date must be before the due date.',
-            'due_date.after' => 'The due date must be after the start date.'
-        ]);
-    
-        $project->update($validated);
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully!');
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'start_date' => 'required|date|before:due_date',
+        'due_date' => 'required|date|after:start_date',
+        'engineers' => 'nullable|array',
+        'engineers.*' => 'exists:users,id',
+        'estimated_hours' => 'required|numeric|min:0'
+    ], [
+        'start_date.before' => 'The start date must be before the due date.',
+        'due_date.after' => 'The due date must be after the start date.'
+    ]);
+
+    // Update the project details
+    $project->update($validated);
+
+    // Merge existing and new engineers
+    if ($request->has('engineers')) {
+        $existingEngineers = $project->engineers->pluck('id')->toArray();
+        $newEngineers = $request->input('engineers');
+        $allEngineers = array_unique(array_merge($existingEngineers, $newEngineers));
+        $project->engineers()->sync($allEngineers);
     }
+    return $this->show($project);
+}
+
 
     public function destroy(Project $project)
     {

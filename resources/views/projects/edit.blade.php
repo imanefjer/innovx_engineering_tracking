@@ -4,47 +4,56 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h1>Edit Project: {{ $project->name }}</h1>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header ">
+                    <h1 class="h4 mb-0">Edit Project: {{ $project->name }}</h1>
                 </div>
                 <div class="card-body">
+                    <!-- Section to display assigned engineers -->
+                    <div class="mb-4">
+                        <h3 class="h5">Assigned Engineers</h3>
+                        <ul class="list-group">
+                            @foreach ($project->engineers as $engineer)
+                                <li class="list-group-item">{{ $engineer->name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+
                     <form action="{{ route('projects.update', $project) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group">
-                            <label for="name">Project Name</label>
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Project Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $project->name }}" required>
                         </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" required>{{ $project->description }}</textarea>
+                        <div class="form-group mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ $project->description }}</textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="start_date">Start Date</label>
+                        <div class="form-group mb-3">
+                            <label for="start_date" class="form-label">Start Date</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date', $project->start_date->toDateString()) }}">
                         </div>
-
-                        <div class="form-group">
-                            <label for="due_date">Due Date</label>
+                        <div class="form-group mb-3">
+                            <label for="due_date" class="form-label">Due Date</label>
                             <input type="date" class="form-control" id="due_date" name="due_date" value="{{ old('due_date', $project->due_date->toDateString()) }}">
                         </div>
-                        <div class ="form-group">
-                            <label for ="estimated_hours">Estimated hours</label>
+                        <div class="form-group mb-3">
+                            <label for="estimated_hours" class="form-label">Estimated Hours</label>
                             <input type="number" class="form-control" id="estimated_hours" name="estimated_hours" value="{{ $project->estimated_hours }}" step="any" required>
                         </div>
-                        <div class="form-group">
-                            <label for="engineers">Assign Engineers</label>
+                        <div class="form-group mb-4">
+                            <label for="engineers" class="form-label">Assign Engineers</label>
                             <select multiple class="form-control" id="engineers" name="engineers[]">
-                                @foreach ($allEngineers as $engineer)
-                                    <option value="{{ $engineer->id }}" {{ in_array($engineer->id, $project->engineers->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                @foreach ($unassignedEngineers as $engineer)
+                                    <option value="{{ $engineer->id }}">
                                         {{ $engineer->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Project</button>
+                        <button type="submit" class="btn btn-primary w-100">Update Project</button>
                     </form>
                 </div>
             </div>

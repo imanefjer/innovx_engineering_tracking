@@ -126,7 +126,7 @@
                                    
                                     <label for="assigned_to">Assign to Engineer:</label>
                                     <select class="form-control" id="assigned_to" name="assigned_to">
-                                        @foreach($engineers as $engineer) <!-- Change this line -->
+                                        @foreach($project->engineers as $engineer)
                                             <option value="{{ $engineer->id }}">{{ $engineer->name }}</option>
                                         @endforeach
                                     </select>
