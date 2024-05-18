@@ -2,23 +2,53 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <h1 class="card-title text-center text-primary mb-4">Pending Tasks</h1>
-            @if($pendingTasks->isEmpty())
-                <div class="alert alert-info text-center">No pending tasks at the moment.</div>
-            @else
-                <div class="list-group">
-                    @foreach ($pendingTasks as $task)
-                        <a href="{{ route('engineers.projects.show', $task->project_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-2 p-3 shadow-sm rounded border-0 {{ $loop->odd ? 'bg-light' : 'bg-white' }}">
-                            <div class="d-flex flex-column">
-                                <h5 class="mb-1 text-dark">{{ $task->name }}</h5>
-                            </div>
-                            <span class="badge bg-info rounded-pill p-1">{{ $task->due_date->format('Y-m-d') }}</span>
-                        </a>
-                    @endforeach
+    <div class="row">
+        <!-- Pending Tasks Section -->
+        <div class="col-md-6 mb-5">
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2 class="section-title">Pending Tasks</h2>
                 </div>
-            @endif
+                @if($pendingTasks->isEmpty())
+                    <div class="empty-state">No pending tasks at the moment.</div>
+                @else
+                    <div class="tasks-list">
+                        @foreach ($pendingTasks as $task)
+                            <a class="task-card pending" href="{{ route('engineers.projects.show', $task->project_id) }}">
+                                <div class="task-info">
+                                    <h5 class="task-name">{{ $task->name }}</h5>
+                                    <p class="task-priority text-{{ $task->priority === 'high' ? 'danger' : ($task->priority === 'medium' ? 'warning' : 'secondary') }}">{{ ucfirst($task->priority) }} Priority</p>
+                                </div>
+                                <div class="task-date">{{ $task->due_date->format('Y-m-d') }}</div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Overdue Tasks Section -->
+        <div class="col-md-6 mb-5">
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2 class="section-title">Overdue Tasks</h2>
+                </div>
+                @if($overdueTasks->isEmpty())
+                    <div class="empty-state">No overdue tasks at the moment.</div>
+                @else
+                    <div class="tasks-list">
+                        @foreach ($overdueTasks as $task)
+                            <a class="task-card overdue" href="{{ route('engineers.projects.show', $task->project_id) }}">
+                                <div class="task-info">
+                                    <h5 class="task-name">{{ $task->name }}</h5>
+                                    <p class="task-date">Original Due Date: {{ $task->due_date->format('Y-m-d') }}</p>
+                                </div>
+                                <div class="task-status">Overdue</div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>
@@ -26,23 +56,72 @@
 
 <style>
     .container {
-        max-width: 800px;
+        max-width: 1200px;
     }
-    .card {
-        background-color: #ffffff;
-        border-radius: 1rem;
+    .tasks-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .card-title {
-        font-size: 2rem;
+    .section-header {
+        margin-bottom: 20px;
     }
-    .list-group-item {
-        transition: all 0.3s ease;
+    .section-title {
+        font-size: 1.2rem;
+        color: #333;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
     }
-    .list-group-item:hover {
-        background-color: #e0e0e0;
-        transform: scale(1.02);
+    .empty-state {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #777;
     }
-    .badge {
-        font-size: 1rem;
+    .tasks-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .task-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s;
+    }
+    .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+          text-decoration: none;
+
+
+    }
+    .task-card.pending {
+        border-left: 6px solid #17a2b8;
+    }
+    .task-card.overdue {
+        border-left: 6px solid #dc3545;
+    }
+    .task-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .task-name {
+        font-size: 1.2rem;
+        color: #333;
+        margin: 0;
+    }
+    .task-priority,
+    .task-date,
+    .task-status {
+        font-size: 0.9rem;
+        color: #555;
+    }
+    .task-status {
+        font-weight: bold;
+        color: #dc3545;
     }
 </style>

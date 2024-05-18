@@ -59,7 +59,15 @@ class TaskController extends Controller
                             ->where('assigned_to', $currentUserId)
                             ->get();
 
-        return view('tasks.pending', compact('pendingTasks'));
+        $pendingCount = $pendingTasks->count();
+        $overdueTasks = Task::where('status', '!=', 'completed')
+                            ->where('assigned_to', $currentUserId)
+                            ->where('due_date', '<', now())
+                            ->get();
+    
+        $overdueCount = $overdueTasks->count();
+                        
+        return view('tasks.pending', compact('pendingTasks', 'pendingCount', 'overdueTasks', 'overdueCount'));
     }
     public function store1(Request $request)
     {

@@ -42,6 +42,11 @@ class EngineerController extends Controller
                 ->where('status', 'pending')
                 ->where('assigned_to', $user->id)  // Ensure tasks are assigned to this engineer
                 ->count();
+            $project->overdue_tasks_count = $project->tasks()
+                ->where('due_date', '<', now())
+                ->where('status', '!=', 'completed')
+                ->where('assigned_to', $user->id)  // Ensure tasks are assigned to this engineer
+                ->count();
         });
     
         // Retrieve only tasks assigned to this engineer, grouped by status

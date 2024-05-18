@@ -57,7 +57,7 @@ Route::middleware(['auth', 'manager', 'preventCache'])->group(function () {
     // Task routes
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::post('/tasks/store1', [TaskController::class, 'store1'])->name('tasks.store1'); // Changed to a unique path
-
+    Route::get('/project/overdue', [ProjectController::class, 'overdue'])->name('projects.overdue');
 });
 
 Route::middleware(['auth', 'engineer', 'preventCache'])->group(function () {

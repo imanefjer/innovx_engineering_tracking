@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>My Notifications</h1>
+    <h1>My Notificationnns</h1>
     <ul class="list-group">
         @forelse ($notifications as $notification)
             <li class="list-group-item">

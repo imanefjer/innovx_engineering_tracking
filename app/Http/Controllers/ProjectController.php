@@ -12,19 +12,34 @@ class ProjectController extends Controller
     
     public function index(Request $request)
     {
-        $query = Project::where('manager_id', auth()->id());
-    
-        if ($request->has('search') && $request->search !== '') {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
-        }
+        $search = $request->input('search');
         
-        $projects = $query->paginate(10);  // You can adjust pagination as needed
-    
+        if ($search) {
+            $projects = Project::where('name', 'like', '%' . $search . '%')
+                               ->orWhere('description', 'like', '%' . $search . '%')
+                               ->get();
+        } else {
+            $projects = Project::all();
+        }
+
         return view('projects.index', compact('projects'));
     }
    
+    public function overdue()
+    {
+        // search for tasks that are overdue for the project that belongs to the manager
+        $overdueProjects = Project::where('manager_id', auth()->id())
+            ->with('tasks', function ($query) {
+                $query->where('due_date', '<', now())
+                    ->where('status', '!=', 'completed');
+            })->get();
 
+
+        
+        return view('projects.overdue', compact('overdueProjects'));
+    }
+
+   
     
 
     public function create()

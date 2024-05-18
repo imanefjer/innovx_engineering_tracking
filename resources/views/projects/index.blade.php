@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container mt-5">
     <!-- Clean and Functional Header -->
@@ -9,12 +10,14 @@
 
     <!-- Simplified Search Bar -->
     <div class="mb-5">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search projects..." name="search" value="{{ request('search') }}">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="submit">Search</button>
+        <form action="{{ route('projects.index') }}" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search projects..." name="search" value="{{ request('search') }}">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <!-- Streamlined Project Cards -->
