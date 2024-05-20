@@ -57,43 +57,25 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
             @if(auth()->user()->role === 'engineer')
                 <div  class="m-3">
-                    <a href="{{ route('tasks.pending') }}" >
                     
                         @if($pendingTasksCount > 0)
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="29" height="29" viewBox="0 0 256 256" xml:space="preserve">
-                            <defs>
-                            </defs>
-                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
-                                <path d="M 58.47 76.439 c 0 0.029 0.004 0.057 0.004 0.087 C 58.475 83.967 52.442 90 45 90 s -13.475 -6.033 -13.475 -13.475 c 0 -0.029 0.004 -0.057 0.004 -0.087 C 40.51 69.714 49.49 69.714 58.47 76.439 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(188,32,32); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                <path d="M 75.513 56.082 V 30.513 C 75.513 13.661 61.852 0 45 0 h 0 C 28.148 0 14.487 13.661 14.487 30.513 v 25.569 c 0 3.238 -1.418 6.314 -3.88 8.417 l 0 0 c -2.462 2.103 -3.88 5.179 -3.88 8.417 v 0 c 0 1.945 1.577 3.522 3.522 3.522 h 69.503 c 1.945 0 3.522 -1.577 3.522 -3.522 v 0 c 0 -3.238 -1.418 -6.314 -3.88 -8.417 l 0 0 C 76.931 62.396 75.513 59.32 75.513 56.082 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(237,38,38); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                            </g>
-                        </svg>
+                          <a class="rednoti" href="{{ route('tasks.pending') }}">
+                                <span class="">{{ $pendingTasksCount }}</span>
+                            </a>
 
 
                         @endif
-                    </a>
 
                 </div>
             @endif
             @if(auth()->user()->role === 'manager')
                 <div  class="m-3">
-                        <a href="{{ route('projects.overdue') }}" >
-                        
-                            @if($overdueProjectsCount > 0)
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="29" height="29" viewBox="0 0 256 256" xml:space="preserve">
-                                <defs>
-                                </defs>
-                                <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
-                                    <path d="M 58.47 76.439 c 0 0.029 0.004 0.057 0.004 0.087 C 58.475 83.967 52.442 90 45 90 s -13.475 -6.033 -13.475 -13.475 c 0 -0.029 0.004 -0.057 0.004 -0.087 C 40.51 69.714 49.49 69.714 58.47 76.439 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(188,32,32); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                    <path d="M 75.513 56.082 V 30.513 C 75.513 13.661 61.852 0 45 0 h 0 C 28.148 0 14.487 13.661 14.487 30.513 v 25.569 c 0 3.238 -1.418 6.314 -3.88 8.417 l 0 0 c -2.462 2.103 -3.88 5.179 -3.88 8.417 v 0 c 0 1.945 1.577 3.522 3.522 3.522 h 69.503 c 1.945 0 3.522 -1.577 3.522 -3.522 v 0 c 0 -3.238 -1.418 -6.314 -3.88 -8.417 l 0 0 C 76.931 62.396 75.513 59.32 75.513 56.082 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(237,38,38); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                </g>
-                            </svg>
-
-
-                            @endif
-                        </a>
-
-                    </div>
+                        @if($overdueProjectsCount > 0)
+                            <a class="rednoti" href="{{ route('projects.overdue') }}" >
+                                <span class="">{{ $overdueProjectsCount }}</span>
+                            </a>
+                        @endif
+                </div>
             @endif
 
 
@@ -175,3 +157,22 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .rednoti {
+        background-color: #dc3444;
+        color: white;
+        padding:5px;
+        border-radius: 30%;
+        font-size: 12px;
+        text-decoration: none;
+    }
+    .rednoti:hover {
+        background-color: #dc3444;
+        color: white;
+        padding:5px;
+        border-radius: 30%;
+        font-size: 12px;
+        text-decoration: none;
+    }
+</style>
